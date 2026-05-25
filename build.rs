@@ -29,6 +29,13 @@ fn main() {
 }
 
 fn probe_installed() -> Option<Vec<PathBuf>> {
+    if let Ok(lib) = pkg_config::Config::new()
+        .print_system_libs(false)
+        .probe("mimalloc")
+    {
+        return Some(lib.include_paths);
+    }
+
     if let Ok(lib) = vcpkg::Config::new()
         .emit_includes(true)
         .find_package("mimalloc")
