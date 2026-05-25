@@ -1,0 +1,42 @@
+name: Linux-CI
+permissions: { }
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rust:
+          - stable
+          - beta
+          - nightly
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v6
+        with:
+          submodules: true
+      - name: Install ${{ matrix.rust }} toolchain
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: ${{ matrix.rust }}
+          components: clippy
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install libmimalloc-dev
+      - name: Cargo build
+        run: cargo build -vv
+      - name: Cargo clippy
+        run: cargo clippy
