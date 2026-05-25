@@ -36,6 +36,6 @@ fn probe_installed() -> Option<Vec<PathBuf>> {
         return Some(lib.include_paths);
     }
 
-    println!("cargo:rustc-link-lib=native=mimalloc");
+    println!("cargo:rustc-link-lib=mimalloc");
     None
 }
