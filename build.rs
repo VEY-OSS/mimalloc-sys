@@ -75,6 +75,8 @@ fn main() {
     cmake_config.define("MI_LIBC_MUSL", "ON");
     #[cfg(feature = "secure")]
     cmake_config.define("MI_SECURE", "ON");
+    #[cfg(target_env = "msvc")]
+    select_msvc_crt(&mut cmake_config);
 
     let mimalloc_install_root = cmake_config.build();
     let lib_search_dir = Path::new(&mimalloc_install_root).join("lib");
@@ -92,4 +94,14 @@ fn main() {
     println!("cargo:rustc-link-lib=static={libname}");
 
     do_bindgen(vec![include_dir]);
+}
+
+#[cfg(all(feature = "vendored", target_env = "msvc"))]
+fn select_msvc_crt(cmake_config: &mut cmake::Config) {
+    let linkage = env::var("CARGO_CFG_TARGET_FEATURE").unwrap_or_default();
+    if linkage.contains("crt-static") {
+        cmake_config.define("CMAKE_MSVC_RUNTIME_LIBRARY", "MultiThreaded");
+    } else {
+        cmake_config.define("CMAKE_MSVC_RUNTIME_LIBRARY", "MultiThreadedDLL");
+    }
 }
