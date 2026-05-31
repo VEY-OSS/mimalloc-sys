@@ -69,14 +69,15 @@ fn main() {
         .define("MI_BUILD_STATIC", "ON")
         .define("MI_BUILD_TESTS", "OFF")
         .define("MI_OPT_ARCH", "ON")
-        .define("MI_OPT_SIMD", "ON");
+        .define("MI_OPT_SIMD", "ON")
+        .define("MI_INSTALL_TOPLEVEL", "ON");
     #[cfg(target_env = "musl")]
     cmake_config.define("MI_LIBC_MUSL", "ON");
     #[cfg(feature = "secure")]
     cmake_config.define("MI_SECURE", "ON");
 
-    let mimalloc_build_dir = cmake_config.build();
-    let lib_search_dir = Path::new(&mimalloc_build_dir).join("build");
+    let mimalloc_install_root = cmake_config.build();
+    let lib_search_dir = Path::new(&mimalloc_install_root).join("lib");
     // set link options
     println!(
         "cargo:rustc-link-search=native={}",
