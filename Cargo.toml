@@ -1,6 +1,6 @@
 [package]
 name = "vey-mimalloc-sys"
-version = "0.2.3+3.3.2"
+version = "0.2.4+3.4.1"
 edition = "2024"
 links = "mimalloc"
 license = "Apache-2.0"
