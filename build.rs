@@ -93,6 +93,10 @@ fn main() {
     }
     println!("cargo:rustc-link-lib=static={libname}");
 
+    if env::var("CARGO_CFG_WINDOWS").is_ok() {
+        println!("cargo:rustc-link-lib=advapi32");
+    }
+
     do_bindgen(vec![include_dir]);
 }
 
