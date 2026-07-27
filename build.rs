@@ -6,6 +6,11 @@ use bindgen::{MacroTypeVariation, RustEdition};
 #[cfg(not(feature = "vendored"))]
 fn main() {
     let include_dirs = probe_installed().unwrap_or_default();
+
+    if env::var("CARGO_CFG_WINDOWS").is_ok() {
+        println!("cargo:rustc-link-lib=advapi32");
+    }
+
     do_bindgen(include_dirs);
 }
 
